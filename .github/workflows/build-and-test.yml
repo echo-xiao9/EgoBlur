@@ -69,8 +69,10 @@ jobs:
             apt-get update
             apt-get install -y \
               "python${PY_VER}" \
-              "python${PY_VER}-venv" \
-              "python${PY_VER}-distutils"
+              "python${PY_VER}-venv"
+            if apt-cache show "python${PY_VER}-distutils" >/dev/null 2>&1; then
+              apt-get install -y "python${PY_VER}-distutils"
+            fi
           else
             dnf install -y \
               "python${PY_VER}" \
