@@ -63,14 +63,20 @@ jobs:
         run: |
           PY_VER="${{ matrix.python-version }}"
           if [ "${{ matrix.distro.package_manager }}" = "apt" ]; then
+            export DEBIAN_FRONTEND=noninteractive
+            export TZ=Etc/UTC
             apt-get update
-            apt-get install -y software-properties-common
+            apt-get install -y tzdata
+            ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime
+            dpkg-reconfigure -f noninteractive tzdata
+            apt-get install -y software-properties-common python3-pip
             add-apt-repository universe -y
             add-apt-repository ppa:deadsnakes/ppa -y
             apt-get update
+            apt-get upgrade -y
             apt-get install -y \
               "python${PY_VER}" \
-              "python${PY_VER}-venv"
+              "python${PY_VER}-venv" || echo "python${PY_VER}-venv not available, will fall back to virtualenv"
             if apt-cache show "python${PY_VER}-distutils" >/dev/null 2>&1; then
               apt-get install -y "python${PY_VER}-distutils"
             fi
@@ -83,7 +89,12 @@ jobs:
       - name: Create virtual environment
         run: |
           PY_BIN="python${{ matrix.python-version }}"
-          $PY_BIN -m venv .venv
+          if ! $PY_BIN -m venv .venv; then
+            echo "Falling back to virtualenv for ${PY_BIN}"
+            python3 -m pip install --upgrade pip
+            python3 -m pip install --upgrade virtualenv
+            python3 -m virtualenv -p $PY_BIN .venv
+          fi
           . .venv/bin/activate
           python -m pip install --upgrade pip
 
