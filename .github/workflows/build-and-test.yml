@@ -50,37 +50,52 @@ jobs:
           if [ "${{ matrix.distro.package_manager }}" = "apt" ]; then
             apt-get update
             DEBIAN_FRONTEND=noninteractive apt-get install -y \
-              git curl ca-certificates build-essential ffmpeg libsm6 libxext6 xz-utils
+              git curl ca-certificates build-essential ffmpeg libsm6 libxext6 xz-utils \
+              bzip2 libbz2-dev
             rm -rf /var/lib/apt/lists/*
           else
             dnf install -y \
-              git curl ca-certificates gcc gcc-c++ make ffmpeg mesa-libGL libSM libXext xz
+              git curl ca-certificates gcc gcc-c++ make ffmpeg mesa-libGL libSM libXext xz \
+              bzip2 bzip2-libs
           fi
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install Python dependencies
+      - name: Install Python ${{ matrix.python-version }}
         run: |
+          PY_VER="${{ matrix.python-version }}"
+          if [ "${{ matrix.distro.package_manager }}" = "apt" ]; then
+            apt-get update
+            apt-get install -y software-properties-common
+            add-apt-repository ppa:deadsnakes/ppa -y
+            apt-get update
+            apt-get install -y \
+              "python${PY_VER}" \
+              "python${PY_VER}-venv" \
+              "python${PY_VER}-distutils"
+          else
+            dnf install -y \
+              "python${PY_VER}" \
+              "python${PY_VER}-devel"
+          fi
+
+      - name: Create virtual environment
+        run: |
+          PY_BIN="python${{ matrix.python-version }}"
+          $PY_BIN -m venv .venv
+          . .venv/bin/activate
           python -m pip install --upgrade pip
-          python -m pip install \
-            "moviepy>=1.0.3,<2" \
-            "numpy>=1.24,<3" \
-            "opencv-python-headless>=4.7,<5" \
-            "tqdm>=4.64,<5"
-          python -m pip install \
-            torch==${TORCH_VERSION} \
-            torchvision==${TORCHVISION_VERSION} \
-            --index-url ${PYTORCH_INDEX_URL}
-          python -m pip install --no-deps -e .
 
-      - name: Smoke test Gen2 CLI
-        run: python -m gen2.script.demo_ego_blur_gen2 --help
+      - name: Install EgoBlur from source
+        env:
+          PIP_EXTRA_INDEX_URL: ${{ env.PYTORCH_INDEX_URL }}
+        run: |
+          . .venv/bin/activate
+          pip install --no-cache-dir .
 
-      - name: Smoke test Gen1 CLI
-        run: python -m gen1.script.demo_ego_blur_gen1 --help
+      - name: Smoke test CLI entry points
+        run: |
+          . .venv/bin/activate
+          egoblur-gen2 -h
+          egoblur-gen1 -h
 
   macos:
     name: macOS (${{ matrix.runner }} / py${{ matrix.python-version }})
@@ -104,21 +119,20 @@ jobs:
           brew update
           brew install ffmpeg
 
-      - name: Install Python dependencies
+      - name: Create virtual environment
         run: |
+          python -m venv .venv
+          . .venv/bin/activate
           python -m pip install --upgrade pip
-          python -m pip install \
-            "moviepy>=1.0.3,<2" \
-            "numpy>=1.24,<3" \
-            "opencv-python-headless>=4.7,<5" \
-            "tqdm>=4.64,<5"
-          python -m pip install \
-            torch==${TORCH_VERSION} \
-            torchvision==${TORCHVISION_VERSION}
-          python -m pip install --no-deps -e .
 
-      - name: Smoke test Gen2 CLI
-        run: python -m gen2.script.demo_ego_blur_gen2 --help
+      - name: Install EgoBlur from source
+        run: |
+          . .venv/bin/activate
+          pip install --no-cache-dir .
 
-      - name: Smoke test Gen1 CLI
-        run: python -m gen1.script.demo_ego_blur_gen1 --help
+      - name: Smoke test CLI entry points
+        run: |
+          . .venv/bin/activate
+          egoblur-gen2 -h
+          egoblur-gen1 -h
+
