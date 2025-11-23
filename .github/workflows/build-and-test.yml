@@ -65,6 +65,7 @@ jobs:
           if [ "${{ matrix.distro.package_manager }}" = "apt" ]; then
             apt-get update
             apt-get install -y software-properties-common
+            add-apt-repository universe -y
             add-apt-repository ppa:deadsnakes/ppa -y
             apt-get update
             apt-get install -y \
