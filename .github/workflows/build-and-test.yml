@@ -89,11 +89,16 @@ jobs:
       - name: Create virtual environment
         run: |
           PY_BIN="python${{ matrix.python-version }}"
-          if ! $PY_BIN -m venv .venv; then
-            echo "Falling back to virtualenv for ${PY_BIN}"
+          PY_BIN_PATH="$(command -v ${PY_BIN} || true)"
+          if [ -z "${PY_BIN_PATH}" ]; then
+            echo "Unable to locate ${PY_BIN}; ensure it is installed."
+            exit 1
+          fi
+          if ! "${PY_BIN_PATH}" -m venv .venv; then
+            echo "Falling back to virtualenv for ${PY_BIN_PATH}"
             python3 -m pip install --upgrade pip
             python3 -m pip install --upgrade virtualenv
-            python3 -m virtualenv -p $PY_BIN .venv
+            python3 -m virtualenv --python "${PY_BIN_PATH}" .venv
           fi
           . .venv/bin/activate
           python -m pip install --upgrade pip
