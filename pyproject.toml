@@ -14,7 +14,6 @@ authors = [
 ]
 classifiers = [
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
@@ -27,8 +26,8 @@ dependencies = [
   "numpy>=1.24,<3",
   "opencv-python-headless>=4.7,<5",
   "tqdm>=4.64,<5",
-  "torch==2.5.1",
-  "torchvision==0.20.1",
+  "torch==2.9.1",
+  "torchvision==0.24.1",
 ]
 
 [project.urls]
