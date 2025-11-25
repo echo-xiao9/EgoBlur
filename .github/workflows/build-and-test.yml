@@ -117,7 +117,8 @@ jobs:
 
               # Verify python package is available
               echo "Searching for python${PY_VER} package..."
-              apt-cache search "python${PY_VER}" | head -20
+              # Truncate results; ignore SIGPIPE from apt-cache when head exits early
+              apt-cache search "python${PY_VER}" | head -20 || true
 
               if ! apt-cache show "python${PY_VER}" >/dev/null 2>&1; then
                 echo "ERROR: Package python${PY_VER} not found in repositories"
