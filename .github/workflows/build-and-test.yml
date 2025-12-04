@@ -50,12 +50,12 @@ jobs:
           if [ "${{ matrix.distro.package_manager }}" = "apt" ]; then
             apt-get update
             DEBIAN_FRONTEND=noninteractive apt-get install -y \
-              git curl ca-certificates build-essential ffmpeg libsm6 libxext6 xz-utils \
+              git curl wget ca-certificates build-essential ffmpeg libsm6 libxext6 xz-utils \
               bzip2 libbz2-dev unzip
             rm -rf /var/lib/apt/lists/*
           else
             dnf install -y \
-              git curl ca-certificates gcc gcc-c++ make ffmpeg mesa-libGL libSM libXext xz \
+              git curl wget ca-certificates gcc gcc-c++ make ffmpeg mesa-libGL libSM libXext xz \
               bzip2 bzip2-libs unzip
           fi
 
@@ -213,12 +213,12 @@ jobs:
           set -euxo pipefail
           . .venv/bin/activate
           mkdir -p "${OUTPUT_DIR}"
-          python gen2/script/demo_ego_blur_gen2.py \
+          egoblur-gen2 \
             --face_model_path "${FACE_MODEL_PATH}" \
             --input_image_path "${PWD}/gen2/demo_assets/test_face_image.png" \
             --output_image_path "${OUTPUT_DIR}/test_face_image_ci.png" \
             --scale_factor_detections 1.0
-          python gen2/script/demo_ego_blur_gen2.py \
+          egoblur-gen2 \
             --lp_model_path "${LP_MODEL_PATH}" \
             --input_image_path "${PWD}/gen2/demo_assets/test_lp_image.png" \
             --output_image_path "${OUTPUT_DIR}/test_lp_image_ci.png" \
@@ -267,17 +267,10 @@ jobs:
           set -euxo pipefail
           . .venv/bin/activate
           mkdir -p "${OUTPUT_DIR}"
-          python gen1/script/demo_ego_blur_gen1.py \
+          egoblur-gen1 \
             --face_model_path "${FACE_MODEL_PATH_GEN1}" \
-            --lp_model_path "${LP_MODEL_PATH_GEN1}" \
-            --input_image_path "${PWD}/gen1/demo_assets/test_face_image.png" \
+            --input_image_path "${PWD}/gen1/demo_assets/test_image.jpg" \
             --output_image_path "${OUTPUT_DIR}/test_face_image_ci_gen1.png" \
-            --scale_factor_detections 1.0
-          python gen1/script/demo_ego_blur_gen1.py \
-            --face_model_path "${FACE_MODEL_PATH_GEN1}" \
-            --lp_model_path "${LP_MODEL_PATH_GEN1}" \
-            --input_image_path "${PWD}/gen1/demo_assets/test_lp_image.png" \
-            --output_image_path "${OUTPUT_DIR}/test_lp_image_ci_gen1.png" \
             --scale_factor_detections 1.0
 
       - name: Upload Gen1 inference artifacts
@@ -287,7 +280,7 @@ jobs:
           if-no-files-found: error
           path: |
             gen1/demo_assets/output/test_face_image_ci_gen1.png
-            gen1/demo_assets/output/test_lp_image_ci_gen1.png
+
   macos:
     name: macOS (${{ matrix.runner }} / py${{ matrix.python-version }})
     runs-on: ${{ matrix.runner }}
@@ -368,12 +361,12 @@ jobs:
           set -euxo pipefail
           . .venv/bin/activate
           mkdir -p "${OUTPUT_DIR}"
-          python gen2/script/demo_ego_blur_gen2.py \
+          egoblur-gen2 \
             --face_model_path "${FACE_MODEL_PATH}" \
             --input_image_path "${PWD}/gen2/demo_assets/test_face_image.png" \
             --output_image_path "${OUTPUT_DIR}/test_face_image_ci.png" \
             --scale_factor_detections 1.0
-          python gen2/script/demo_ego_blur_gen2.py \
+          egoblur-gen2 \
             --lp_model_path "${LP_MODEL_PATH}" \
             --input_image_path "${PWD}/gen2/demo_assets/test_lp_image.png" \
             --output_image_path "${OUTPUT_DIR}/test_lp_image_ci.png" \
@@ -422,17 +415,11 @@ jobs:
           set -euxo pipefail
           . .venv/bin/activate
           mkdir -p "${OUTPUT_DIR}"
-          python gen1/script/demo_ego_blur_gen1.py \
+          egoblur-gen1 \
             --face_model_path "${FACE_MODEL_PATH_GEN1}" \
             --lp_model_path "${LP_MODEL_PATH_GEN1}" \
-            --input_image_path "${PWD}/gen1/demo_assets/test_face_image.png" \
+            --input_image_path "${PWD}/gen1/demo_assets/test_image.jpg" \
             --output_image_path "${OUTPUT_DIR}/test_face_image_ci_gen1.png" \
-            --scale_factor_detections 1.0
-          python gen1/script/demo_ego_blur_gen1.py \
-            --face_model_path "${FACE_MODEL_PATH_GEN1}" \
-            --lp_model_path "${LP_MODEL_PATH_GEN1}" \
-            --input_image_path "${PWD}/gen1/demo_assets/test_lp_image.png" \
-            --output_image_path "${OUTPUT_DIR}/test_lp_image_ci_gen1.png" \
             --scale_factor_detections 1.0
 
       - name: Upload Gen1 inference artifacts
@@ -442,4 +429,3 @@ jobs:
           if-no-files-found: error
           path: |
             gen1/demo_assets/output/test_face_image_ci_gen1.png
-            gen1/demo_assets/output/test_lp_image_ci_gen1.png
