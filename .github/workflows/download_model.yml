@@ -16,7 +16,7 @@ jobs:
       - name: Download EgoBlur Gen2 models
         env:
           FACE_MODEL_URL: "https://scontent-sea5-1.xx.fbcdn.net/m1/v/t6/An8ONis8Gp-rzgPM06SVUcz6MjMEQPau6sgr25xJrEvmEfvr_YRW0UWHKSlOtV3z0fj98V2uqqnPbnLrU0SARtcph53QmA-x3nrdYxFl-OcYe0nOc7Y0BQx4SS7tKF3zXjcPXKiQS8WEl8k7Ag.zip/ego_blur_face_gen2.zip?_nc_gid=Bnqzzs-Hw3TUw2xPOdS8vg&_nc_oc=AdnCyC1Ksl12pYZexXmg6i7tazF6p49YZh_QBOQT91JZlQp3Q7qRMMkiP6oNXcM3EDQ&sdl=1&ccb=10-5&oh=00_AfnfEq9kXuGF18-fZNfXkovu_VgiAioxjmyAMU5fLVFrNg&oe=69586C58&_nc_sid=5cb19f"
-          LP_MODEL_URL: "https://scontent-sea5-1.xx.fbcdn.net/m1/v/t6/An8ONis8Gp-rzgPM06SVUcz6MjMEQPau6sgr25xJrEvmEfvr_YRW0UWHKSlOtV3z0fj98V2uqqnPbnLrU0SARtcph53QmA-x3nrdYxFl-OcYe0nOc7Y0BQx4SS7tKF3zXjcPXKiQS8WEl8k7Ag.zip/ego_blur_face_gen2.zip?_nc_gid=Bnqzzs-Hw3TUw2xPOdS8vg&_nc_oc=AdnCyC1Ksl12pYZexXmg6i7tazF6p49YZh_QBOQT91JZlQp3Q7qRMMkiP6oNXcM3EDQ&sdl=1&ccb=10-5&oh=00_AfnfEq9kXuGF18-fZNfXkovu_VgiAioxjmyAMU5fLVFrNg&oe=69586C58&_nc_sid=5cb19f"
+          LP_MODEL_URL: "https://scontent-sea5-1.xx.fbcdn.net/m1/v/t6/An9xrh1Lyyk5EuJPXmDPC2AZQzZp3fLxlw9twrwWc9iNl8PfgzOMs0NehwSRTJN4tZ5iwPh1voT8JFpDeWCzGZnSSsXMaIzNPNjF70lWWMKHiFgOsE-ZT8aP9oTHTXGraEWc5_e3BMssDxgS.zip/ego_blur_lp_gen2.zip?_nc_gid=-efrwVRzJldEhB_POMBZtg&_nc_oc=Adn55ZpzPXSfvFpmDnVLv2yXzVw0O_8xrc82gzPBSQAjpMjyF3t2U6_cur-059H47j4&sdl=1&ccb=10-5&oh=00_AfnH9BBrj206CxDWlxtTDz3NVt3lOD56VSOMttr-qzGktw&oe=6959230A&_nc_sid=5cb19f"
         run: |
           set -euxo pipefail
           MODELS_DIR="${PWD}/.ci_gen2_models"
