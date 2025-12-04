@@ -207,6 +207,7 @@ jobs:
           echo "LP_MODEL_PATH=${LP_MODEL_PATH}" >> "${GITHUB_ENV}"
 
       - name: Run Gen2 demo inference
+        shell: bash
         env:
           OUTPUT_DIR: ${{ github.workspace }}/gen2/demo_assets/output
         run: |
@@ -261,6 +262,7 @@ jobs:
           echo "LP_MODEL_PATH_GEN1=${LP_MODEL_PATH_GEN1}" >> "${GITHUB_ENV}"
 
       - name: Run Gen1 demo inference
+        shell: bash
         env:
           OUTPUT_DIR: ${{ github.workspace }}/gen1/demo_assets/output
         run: |
@@ -355,6 +357,7 @@ jobs:
           echo "LP_MODEL_PATH=${LP_MODEL_PATH}" >> "${GITHUB_ENV}"
 
       - name: Run Gen2 demo inference
+        shell: bash
         env:
           OUTPUT_DIR: ${{ github.workspace }}/gen2/demo_assets/output
         run: |
@@ -409,6 +412,7 @@ jobs:
           echo "LP_MODEL_PATH_GEN1=${LP_MODEL_PATH_GEN1}" >> "${GITHUB_ENV}"
 
       - name: Run Gen1 demo inference
+        shell: bash
         env:
           OUTPUT_DIR: ${{ github.workspace }}/gen1/demo_assets/output
         run: |
